@@ -1,0 +1,44 @@
+import discord 
+from discord.ext import commands
+from random import randint
+
+
+bot = commands.Bot(command_prefix="/",intents=discord.Intents.all())
+pet = {
+    "health": 100,
+    "streigth": 1,
+    "defence": 1
+}
+@bot.command("train")
+async def train(ctx):
+    pet["streigth"] += 2
+    pet["health"] -= 10
+    await ctx.send("ваш питомец прошел изнурительные тренеровки")
+    await ctx.send(str(pet))
+@bot.command("feed")
+async def feed(ctx):
+    pet["health"] += 20
+    await ctx.send("Ваш питомец вкусно покушол и стал капибарой")
+    await ctx.send(str(pet))
+@bot.command("fight")
+async def fight(ctx):
+    enemy = {
+        "health": randint(1,100),
+        "streigth": randint(1,100),
+        "defence": randint(1,100)
+    }
+    await ctx.send("вы атакуете врага!")
+    while enemy["health"] >= 0 and pet["health"] >= 0:
+        pet["health"] -= enemy["streigth"] - pet["defence"]
+        enemy["health"] -= pet["streigth"] - enemy["defence"]
+        await ctx.send("ваш питомец:" +str(pet))
+        await ctx.send("ваш враг:" +str(enemy))
+    if enemy["health"] > pet["health"]:
+        await ctx.send("вы проиграли")
+    else:
+        await ctx.send("вы победили")
+@bot.command("help")
+async def help(ctx):
+    await ctx.send("Вот список комманд которые выполняет эта часть бота: /train, /feed, /fight ")
+
+bot.run("MTE0ODg4ODg0NDMxODUzOTg0Nw.GamE7R.rCTtPmmWK0P-PXChr31-TBmaURsLjBpNmixz1M")
